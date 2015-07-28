@@ -1,3 +1,4 @@
+[![Circle CI](https://circleci.com/gh/goller/nsq-to-s3.svg?style=svg)](https://circleci.com/gh/goller/nsq-to-s3)
 # nsq-to-s3
 Stream an NSQ channel to S3
 
