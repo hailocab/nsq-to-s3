@@ -4,18 +4,23 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"os"
+	"time"
+
 	log "github.com/cihub/seelog"
 	"github.com/goamz/goamz/aws"
 	"github.com/goamz/goamz/s3"
-	"os"
-	"time"
 )
+
+// FileName returns s3 key for current time using main's s3PathFormat
+func FileName() string {
+	t := time.Now().UTC()
+	return t.Format(*s3PathFormat)
+}
 
 // Print messages to the screen:
 func PrintMessages(fileData []byte) error {
-
-	fileName := fmt.Sprintf("%v/%v/%v/%v/%v/%v.%v.gz", *s3Path, time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), *s3FileExtention)
-
+	fileName := FileName()
 	log.Infof("Would store in '%v'", fileName)
 
 	log.Debugf("Messages: %v", string(fileData))
@@ -59,7 +64,7 @@ func StoreMessages(fileData []byte) error {
 	}
 
 	// Build the filename we'll use for S3:
-	fileName := fmt.Sprintf("%v/%v/%v/%v/%v/%v.%v.gz", *s3Path, time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), *s3FileExtention)
+	fileName := fmt.Sprintf("%v.gz", FileName())
 
 	// Upload the data:
 	err = s3Bucket.Put(fileName, fileDataBytes.Bytes(), contType, perm, *options)
