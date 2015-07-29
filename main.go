@@ -3,14 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/bitly/go-nsq"
-	"github.com/bitly/nsq/internal/app"
-	"github.com/bitly/nsq/internal/version"
-	log "github.com/cihub/seelog"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/bitly/go-nsq"
+	"github.com/bitly/nsq/internal/app"
+	"github.com/bitly/nsq/internal/version"
+	log "github.com/cihub/seelog"
 )
 
 var (
@@ -22,12 +23,11 @@ var (
 	maxInFlightTime       = flag.Int("max-in-flight-time", 60, "max time to keep messages in flight (before flushing)")
 	bucketMessages        = flag.Int("bucket-messages", 0, "total number of messages to bucket")
 	bucketSeconds         = flag.Int("bucket-seconds", 600, "total time to bucket messages for (seconds)")
-	s3Bucket              = flag.String("s3bucket", "", "S3 bucket-name to store the output on (eg 'nsq-archive'")
-	s3Path                = flag.String("s3path", "", "S3 path to store files under (eg '/nsq-archive'")
+	s3Bucket              = flag.String("bucket", "", "S3 bucket-name to store the output on (eg 'nsq-archive'")
+	s3PathFormat          = flag.String("path-format", "", "S3 path format.  Uses go time format layouts (eg '/archive/2006/01/02/15/04/05.000000000.msgpack'")
 	awsRegion             = flag.String("awsregion", "us-east-1", "The AWS region-name to connect to")
 	batchMode             = flag.String("batchmode", "memory", "How to batch the messages between flushes [disk, memory, channel]")
 	messageBufferFileName = flag.String("bufferfile", "", "Local file to buffer messages in between flushes to S3")
-	s3FileExtention       = flag.String("extention", "txt", "Extention for files on S3")
 
 	consumerOpts     = app.StringArray{}
 	nsqdTCPAddrs     = app.StringArray{}

@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	log "github.com/cihub/seelog"
-	"github.com/goamz/goamz/aws"
 	"math/rand"
 	"time"
+
+	log "github.com/cihub/seelog"
+	"github.com/goamz/goamz/aws"
 )
 
 const (
@@ -33,7 +34,7 @@ func processArguments() bool {
 		log.Warnf("--s3bucket is required")
 		return true
 	} else {
-		log.Infof("S3-Bucket: %v%v", *s3Bucket, *s3Path)
+		log.Infof("S3-Bucket: %v%v", *s3Bucket, *s3PathFormat)
 	}
 
 	// See if the user has provided a channel name, or invent a random one:
@@ -102,7 +103,7 @@ func processArguments() bool {
 	log.Infof("Bucket-size (seconds): %v", *bucketSeconds)
 	log.Infof("Max-in-flight (messages): %v", *maxInFlight)
 	log.Infof("Max-in-flight (seconds): %v", *maxInFlightTime)
-	log.Infof("S3 file-extention: %v", *s3FileExtention)
+	log.Infof("S3 path format: %v", *s3PathFormat)
 
 	return false
 }
