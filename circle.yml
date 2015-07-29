@@ -1,0 +1,28 @@
+machine:
+  services:
+    - docker
+  environment:
+    DOCKER_BRANCH: $(echo $CIRCLE_BRANCH | tr / _)
+
+dependencies:
+  pre:
+    - if [ ! -d  ~/.go_workspace/src/github.com/goller ]; then mkdir -p ~/.go_workspace/src/github.com/goller; fi
+    - if [ ! -e  ~/.go_workspace/src/github.com/goller/nsq-to-s3 ]; then ln -s ~/nsq-to-s3 ~/.go_workspace/src/github.com/goller; fi
+    - make install-dev-tools
+  override:
+    - make dep-restore
+
+test:
+  pre:
+    - docker run -d -p 4150:4150 -p 4151:4151 --name nsqd --net=host nsqio/nsq:v0.3.5 /nsqd
+  override:
+    - make build
+    - make build-docker
+    - cd ~/.go_workspace/src/github.com/goller/nsq-to-s3 && make cover-integration
+
+deployment:
+  docker:
+    branch: master
+    commands:
+      - make docker-login
+      - make publish
